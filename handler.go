@@ -1,7 +1,6 @@
 package urlshort
 
 import (
-	"fmt"
 	"io"
 	"net/http"
 	"os"
@@ -57,13 +56,11 @@ type pathURL struct {
 func YAMLHandler(filepath string, fallback http.Handler) (http.HandlerFunc, error) {
 	yml, err := YAMLReader(filepath)
 	if err != nil {
-		fmt.Printf("There was an error reading the YAML file: %v\n", err)
 		return nil, err
 	}
 
 	pathUrls, err := YAMLParser(yml)
 	if err != nil {
-		fmt.Printf("There was an error reading the YAML file: %v\n", err)
 		return nil, err
 	}
 

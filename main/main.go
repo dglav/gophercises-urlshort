@@ -26,7 +26,7 @@ func main() {
 		yamlHandler, err := urlshort.YAMLHandler(*filepath, handler)
 		if err != nil {
 			fmt.Printf("There was an error in the YAML handler: %v\n", err)
-			panic(err)
+			return
 		}
 
 		handler = yamlHandler
