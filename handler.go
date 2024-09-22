@@ -55,12 +55,12 @@ type pathURL struct {
 }
 
 func YAMLHandler(filepath string, fallback http.Handler) (http.HandlerFunc, error) {
-	yml, err := YAMLReader(filepath)
+	yml, err := readYAML(filepath)
 	if err != nil {
 		return nil, err
 	}
 
-	pathUrls, err := YAMLParser(yml)
+	pathUrls, err := parseYAML(yml)
 	if err != nil {
 		return nil, err
 	}
@@ -70,7 +70,7 @@ func YAMLHandler(filepath string, fallback http.Handler) (http.HandlerFunc, erro
 	return MapHandler(pathToUrls, fallback), nil
 }
 
-func YAMLReader(filepath string) ([]byte, error) {
+func readYAML(filepath string) ([]byte, error) {
 	file, err := os.Open(filepath)
 	if err != nil {
 		return nil, err
@@ -84,7 +84,7 @@ func YAMLReader(filepath string) ([]byte, error) {
 	return buf, err
 }
 
-func YAMLParser(yml []byte) ([]pathURL, error) {
+func parseYAML(yml []byte) ([]pathURL, error) {
 	var pathURLs []pathURL
 	err := yaml.Unmarshal(yml, &pathURLs)
 	return pathURLs, err
