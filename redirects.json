@@ -1,0 +1,8 @@
+{
+  "redirects": [
+    {
+      "path": "/json",
+      "url": "https://pkg.go.dev/encoding/json"
+    }
+  ]
+}

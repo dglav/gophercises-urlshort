@@ -9,7 +9,8 @@ import (
 )
 
 func main() {
-	filepath := flag.String("yaml", "", "Specify the filepath to the YAML file that contains redirects. The filepath starts from the root directory.")
+	yamlFilepath := flag.String("yaml", "", "Specify the filepath to the YAML file that contains redirects. The filepath starts from the root directory.")
+	jsonFilepath := flag.String("json", "", "Specify the filepath to the JSON file that contains redirects. The filepath starts from the root directory.")
 	flag.Parse()
 
 	mux := defaultMux()
@@ -22,14 +23,25 @@ func main() {
 	handler := urlshort.MapHandler(pathsToUrls, mux)
 
 	// Build the YAMLHandler using the mapHandler as the fallback
-	if *filepath != "" {
-		yamlHandler, err := urlshort.YAMLHandler(*filepath, handler)
+	if *yamlFilepath != "" {
+		yamlHandler, err := urlshort.YAMLHandler(*yamlFilepath, handler)
 		if err != nil {
 			fmt.Printf("There was an error in the YAML handler: %v\n", err)
 			return
 		}
 
 		handler = yamlHandler
+	}
+
+	// Build the JSONHandler using the mapHandler as the fallback
+	if *jsonFilepath != "" {
+		jsonHandler, err := urlshort.JSONHandler(*jsonFilepath, handler)
+		if err != nil {
+			fmt.Printf("There was an error in the JSON handler: %v\n", err)
+			return
+		}
+
+		handler = jsonHandler
 	}
 
 	fmt.Println("Starting the server on :8080")

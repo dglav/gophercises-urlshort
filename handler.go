@@ -1,6 +1,7 @@
 package urlshort
 
 import (
+	"encoding/json"
 	"io"
 	"net/http"
 	"os"
@@ -100,4 +101,39 @@ func convertYamlToMap(pathUrls []pathURL) map[string]string {
 	}
 
 	return pathToUrls
+}
+
+type jsonRedirects struct {
+	Redirects []jsonPathURL `json:"redirects"`
+}
+
+type jsonPathURL struct {
+	Path string `json:"path"`
+	URL  string `json:"url"`
+}
+
+func JSONHandler(filepath string, fallback http.Handler) (http.HandlerFunc, error) {
+	jsonFile, err := os.Open(filepath)
+	if err != nil {
+		return nil, err
+	}
+	defer jsonFile.Close()
+
+	buf, err := io.ReadAll(jsonFile)
+	if err != nil {
+		return nil, err
+	}
+
+	var pathURLs jsonRedirects
+	err = json.Unmarshal(buf, &pathURLs)
+
+	pathToUrls := map[string]string{}
+	for _, pathURL := range pathURLs.Redirects {
+		key := pathURL.Path
+		value := pathURL.URL
+
+		pathToUrls[key] = value
+	}
+
+	return MapHandler(pathToUrls, fallback), err
 }
