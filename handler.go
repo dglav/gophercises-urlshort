@@ -94,10 +94,7 @@ func convertYamlToMap(pathUrls []pathURL) map[string]string {
 	pathToUrls := map[string]string{}
 
 	for _, pathURL := range pathUrls {
-		key := pathURL.Path
-		value := pathURL.URL
-
-		pathToUrls[key] = value
+		pathToUrls[pathURL.Path] = pathURL.URL
 	}
 
 	return pathToUrls
@@ -129,10 +126,7 @@ func JSONHandler(filepath string, fallback http.Handler) (http.HandlerFunc, erro
 
 	pathToUrls := map[string]string{}
 	for _, pathURL := range pathURLs.Redirects {
-		key := pathURL.Path
-		value := pathURL.URL
-
-		pathToUrls[key] = value
+		pathToUrls[pathURL.Path] = pathURL.URL
 	}
 
 	return MapHandler(pathToUrls, fallback), err
