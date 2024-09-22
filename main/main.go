@@ -17,15 +17,9 @@ func main() {
 	}
 	mapHandler := urlshort.MapHandler(pathsToUrls, mux)
 
-	// Build the YAMLHandler using the mapHandler as the
-	// fallback
-	yaml := `
-	- path: /urlshort
-	  url: https://github.com/gophercises/urlshort
-	- path: /urlshort-final
-	  url: https://github.com/gophercises/urlshort/tree/solution
-	`
-	yamlHandler, err := urlshort.YAMLHandler([]byte(yaml), mapHandler)
+	// Build the YAMLHandler using the mapHandler as the fallback
+	filename := "main/redirects.yaml"
+	yamlHandler, err := urlshort.YAMLHandler(filename, mapHandler)
 	if err != nil {
 		panic(err)
 	}
@@ -34,6 +28,7 @@ func main() {
 }
 
 func defaultMux() *http.ServeMux {
+	fmt.Println("serve default mux")
 	mux := http.NewServeMux()
 	mux.HandleFunc("/", hello)
 	return mux
